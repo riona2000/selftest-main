@@ -13,9 +13,13 @@ import {
 import { Line } from 'react-chartjs-2';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
 
+interface LineChartProps {
+    scoreData: number;
+  }
+
 export const options: ChartOptions<'line'> = {};
 
-export default function LineChart(props): JSX.Element {
+export default function LineChart(props: LineChartProps): JSX.Element {
     const { scoreData } = props; // props から scoreData を取得
 
     const labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; // labels の定義

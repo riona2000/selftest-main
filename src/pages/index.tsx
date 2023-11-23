@@ -1,6 +1,6 @@
 import CircleBox from "@/components/CircleBox";
 import Header from "@/components/Header";
-import { Question, questions } from "@/data/data";
+import { Question, questions, scoreMappings } from "@/data/data";
 import { Box, Button, Typography } from "@mui/material";
 import { useState } from "react";
 import React, { useRef, useEffect } from 'react';
@@ -42,13 +42,15 @@ export default function Home() {
       const element = questionRefs.current[nextIndex].current;
       const offset = 100; // 望むオフセット量（ピクセル単位）
   
-      const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
-      const offsetPosition = elementPosition - offset;
-  
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+      if (element instanceof HTMLElement) {
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - offset;
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
   }; 
 
@@ -63,12 +65,12 @@ export default function Home() {
     return personality;
   };
 
-  const calculateNewScores = (typeScores) => {
+  const calculateNewScores = (typeScores: { [type: string]: number }) => {
     return {
-      price: scoreMappings.price[typeScores.price],
-      mileage: scoreMappings.mileage[typeScores.mileage],
-      familiarity: scoreMappings.familiarity[typeScores.familiarity],
-      care: scoreMappings.care[typeScores.care],
+      price: scoreMappings.price[typeScores.price as keyof typeof scoreMappings.price] ?? 0,
+      mileage: scoreMappings.mileage[typeScores.mileage as keyof typeof scoreMappings.mileage] ?? 0,
+      familiarity: scoreMappings.familiarity[typeScores.familiarity as keyof typeof scoreMappings.familiarity] ?? 0,
+      care: scoreMappings.care[typeScores.care as keyof typeof scoreMappings.care] ?? 0,
     };
   };
 
@@ -83,7 +85,7 @@ export default function Home() {
       <Header />
       
       {questions.map((question: Question, index) => (
-        <Box ref={questionRefs.current[index]} sx={{ mt: 10, mx: "auto", width: '100%', maxWidth: "500px" }}>
+        <Box key={question.id} ref={questionRefs.current[index]} sx={{ mt: 10, mx: "auto", width: '100%', maxWidth: "500px" }}>
           <Typography sx={{fontWeight:"bold"}}>Q, {question.text}</Typography>
           <Box
             sx={{

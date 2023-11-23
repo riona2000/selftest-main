@@ -2,6 +2,7 @@ export interface Question {
   id: number;
   text: string;
   type: string;
+  options: string[];
 }
 
 export const questions: Question[] = [
@@ -31,7 +32,7 @@ export const questions: Question[] = [
   }
 ]
 
-const scoreMappings = {
+export const scoreMappings = {
   price: {
     5: 300,
     4: 400,
